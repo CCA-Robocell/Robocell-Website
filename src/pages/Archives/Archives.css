@@ -1,0 +1,417 @@
+/* =========================================
+   ARCHIVES — FILM REEL / ARCHIVAL REDESIGN
+   Palette:
+     --void:    #06080F  (deepest bg)
+     --depth:   #0C1220  (section bg)
+     --surface: #111927  (card bg)
+     --border:  #1E2D45  (subtle border)
+     --gold:    #FFE100  (primary accent)
+     --amber:   #C8960C  (warm secondary)
+     --muted:   #8892A4  (subtext)
+     --ghost:   rgba(255,225,0,0.04) (watermark tint)
+   ========================================= */
+
+/* --- Root / Page --- */
+.rc-archive-page {
+  background: transparent;
+  min-height: 100vh;
+  padding-top: 62px;
+}
+
+.rc-archive-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 72px 32px 120px;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Timeline --- */
+.rc-archive-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 96px;
+}
+
+/* --- Year Section --- */
+.rc-archive-year-section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Ghost watermark year number */
+.rc-archive-year-section::before {
+  content: attr(data-year);
+  position: absolute;
+  top: -28px;
+  right: 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(100px, 14vw, 180px);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 225, 0, 0.06);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  letter-spacing: -4px;
+}
+
+/* --- Film Strip Year Header --- */
+.rc-archive-year-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #0C1220;
+  border: 1px solid #1E2D45;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Perforated left tab */
+.rc-archive-year-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: #FFE100;
+  color: #06080F;
+  flex-shrink: 0;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%);
+  padding-right: 28px;
+}
+
+.rc-archive-year-tab h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30px;
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: 2px;
+  color: #06080F;
+}
+
+/* Film holes row */
+.rc-archive-film-holes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  flex-shrink: 0;
+}
+
+.rc-archive-film-hole {
+  width: 12px;
+  height: 18px;
+  border-radius: 3px;
+  background: #06080F;
+  border: 1px solid #1E2D45;
+  flex-shrink: 0;
+}
+
+/* Label area */
+.rc-archive-year-label-area {
+  flex: 1;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rc-archive-badge {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #C8960C;
+  background: rgba(200, 150, 12, 0.12);
+  border: 1px solid rgba(200, 150, 12, 0.25);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Right film holes */
+.rc-archive-film-holes-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  margin-left: auto;
+}
+
+/* --- Empty State --- */
+.rc-archive-empty {
+  color: #8892A4;
+  font-style: italic;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  padding: 40px 0;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Image Grid --- */
+.rc-archive-image-grid {
+  display: grid;
+  gap: 20px;
+  position: relative;
+  z-index: 1;
+  transition: all 0.4s ease;
+}
+
+.rc-archive-image-grid.collapsed {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.rc-archive-image-grid.expanded {
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+}
+
+@media (max-width: 900px) {
+  .rc-archive-image-grid.collapsed {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .rc-archive-image-grid.collapsed {
+    grid-template-columns: 1fr;
+  }
+  .rc-archive-container {
+    padding: 48px 16px 80px;
+  }
+  .rc-archive-year-tab h2 {
+    font-size: 22px;
+  }
+  .rc-archive-film-holes-right {
+    display: none;
+  }
+}
+
+/* --- Image Cards --- */
+.rc-archive-img-card {
+  position: relative;
+  background: #111927;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid #1E2D45;
+  aspect-ratio: 16 / 9;
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              border-color 0.3s ease,
+              box-shadow 0.35s ease;
+}
+
+.rc-archive-img-card:hover {
+  transform: translateY(-5px) scale(1.015);
+  border-color: rgba(255, 225, 0, 0.35);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 225, 0, 0.1),
+    inset 0 0 60px rgba(255, 225, 0, 0.03);
+}
+
+.rc-archive-img-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease, filter 0.4s ease;
+  filter: saturate(0.85) brightness(0.9);
+}
+
+.rc-archive-img-card:hover img {
+  transform: scale(1.06);
+  filter: saturate(1) brightness(1);
+}
+
+/* Hover overlay — cinematic amber sweep */
+.rc-archive-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(200, 150, 12, 0.12) 0%,
+    rgba(5, 11, 20, 0.55) 60%
+  );
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 14px 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.rc-archive-img-card:hover .rc-archive-hover-overlay {
+  opacity: 1;
+}
+
+.rc-archive-overlay-icon {
+  color: #FFE100;
+  opacity: 0.9;
+}
+
+.rc-archive-overlay-index {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  letter-spacing: 2px;
+  color: rgba(255, 225, 0, 0.55);
+}
+
+/* Bottom gradient on each card (always visible) */
+.rc-archive-img-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(transparent, rgba(6, 8, 15, 0.6));
+  pointer-events: none;
+}
+
+/* --- Toggle Button --- */
+.rc-archive-action-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 4px;
+  position: relative;
+  z-index: 1;
+}
+
+.rc-archive-toggle-btn {
+  background: transparent;
+  border: 1px solid #1E2D45;
+  color: #8892A4;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.rc-archive-toggle-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 225, 0, 0.06), transparent);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.rc-archive-toggle-btn:hover {
+  border-color: rgba(255, 225, 0, 0.4);
+  color: #FFE100;
+}
+
+.rc-archive-toggle-btn:hover::before {
+  opacity: 1;
+}
+
+/* --- Loading State --- */
+.rc-archive-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 0;
+  color: #8892A4;
+  gap: 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+/* --- Lightbox --- */
+.rc-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 8, 15, 0.95);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInOverlay 0.25s ease;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.rc-lightbox-close {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  background: #1E2D45;
+  border: 1px solid #2A3D55;
+  color: #8892A4;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1001;
+}
+
+.rc-lightbox-close:hover {
+  background: rgba(255, 225, 0, 0.1);
+  border-color: #FFE100;
+  color: #FFE100;
+}
+
+.rc-lightbox-content {
+  max-width: min(90vw, 1100px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  animation: scaleInLightbox 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes scaleInLightbox {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.rc-lightbox-content img {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 12px;
+  border: 1px solid #1E2D45;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.7);
+  object-fit: contain;
+}
+
+.rc-lightbox-content p {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: rgba(255, 225, 0, 0.5);
+  margin: 0;
+}

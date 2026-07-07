@@ -1,0 +1,122 @@
+/* Base Card Container */
+.rc-roster-card {
+  position: relative;
+  background: #050B14;
+  border: 1px solid rgba(255, 225, 0, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rc-roster-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(255, 225, 0, 0.12);
+  border-color: rgba(255, 225, 0, 0.4);
+}
+
+/* Image Wrapper */
+.rc-roster-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 280px; /* Fixed height so grids align perfectly */
+  overflow: hidden;
+  background: #08111D;
+}
+
+.rc-roster-card.featured .rc-roster-img-wrap {
+  height: 340px; /* Advisor card is slightly taller */
+}
+
+.rc-roster-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.5s ease;
+}
+
+.rc-roster-card:hover .rc-roster-img-wrap img {
+  transform: scale(1.06);
+}
+
+/* Gradient to blend the bottom of the photo into the text box */
+.rc-roster-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to top, #050B14, transparent);
+}
+
+/* Typography & Info Section */
+.rc-roster-info {
+  padding: 24px 20px;
+  text-align: center;
+  position: relative;
+  background: linear-gradient(180deg, #050B14 0%, #0a111a 100%);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The Yellow Post Badge (Overlaps the image) */
+.rc-roster-role-badge {
+  position: absolute;
+  top: -14px;
+  background: #FFE100;
+  color: #000;
+  padding: 6px 16px;
+  border-radius: 4px;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-family: monospace;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Roster Name */
+.rc-roster-name {
+  color: #FFFFFF;
+  font-weight: 900;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 6px;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+/* Department / Year */
+.rc-roster-dept {
+  color: #A0A8B8;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+/* LinkedIn Circular Button */
+.rc-roster-social {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: #A0A8B8;
+  transition: all 0.2s ease;
+}
+
+.rc-roster-social:hover {
+  background: #0077b5; /* LinkedIn Blue */
+  border-color: #0077b5;
+  color: #FFFFFF;
+  transform: scale(1.1);
+}

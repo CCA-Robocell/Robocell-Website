@@ -1,0 +1,103 @@
+.rc-team-page {
+  background: transparent;
+  min-height: 100vh;
+  padding-top: 62px;
+}
+
+.rc-team-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+
+.rc-team-section {
+  margin-bottom: 72px;
+}
+
+.rc-team-section-last {
+  margin-bottom: 0;
+}
+
+.rc-team-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.rc-team-header h2 {
+  color: #FFFFFF;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Grids for different card sizes */
+.rc-team-grid-featured {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.rc-team-grid-core {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+.rc-team-grid-members {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  /* Keep your 3 column grid */
+  .rc-team-grid-core,
+  .rc-team-grid-featured,
+  .rc-team-grid-members {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+  
+  .rc-roster-img-wrap {
+    height: 120px !important; 
+  }
+  .rc-roster-card.featured .rc-roster-img-wrap {
+    height: 140px !important;
+  }
+
+  .rc-roster-info {
+    padding: 8px 4px !important;
+  }
+  
+  /* --- MOBILE BADGE FIXES --- */
+  .rc-roster-role-badge {
+    font-size: 7px !important; /* Smaller text to fit */
+    padding: 3px 4px !important;
+    top: -12px !important;
+    width: 85% !important; /* Prevents badge from breaking out of the card sideways */
+    text-align: center !important;
+    line-height: 1.1 !important; /* Tighter line spacing for wrapped text */
+    white-space: normal !important; /* Allows text to wrap safely */
+  }
+
+  .rc-roster-name {
+    font-size: 11px !important;
+    margin-top: 18px !important; /* Increased from 10px to push name down below the wrapped badge */
+  }
+  
+  .rc-roster-dept {
+    font-size: 9px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  .rc-roster-social {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  
+  .rc-roster-social svg {
+    width: 12px !important;
+    height: 12px !important;
+  }
+}

@@ -1,0 +1,136 @@
+
+/* Dark Overlay Background */
+.rc-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.rc-drawer-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* The Sliding Panel - THIS HIDES IT OFF SCREEN */
+.rc-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 300px;
+  max-width: 85vw;
+  background: #08111D;
+  border-left: 1px solid rgba(255, 225, 0, 0.1);
+  z-index: 100;
+  
+  /* This pushes the drawer to the right, hiding it */
+  transform: translateX(100%); 
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+}
+
+/* This slides it back in when the menu is clicked */
+.rc-drawer.open {
+  transform: translateX(0);
+}
+
+/* Header Area inside Drawer */
+.rc-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rc-drawer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rc-navbar-logo-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.rc-drawer-logo-text {
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 1rem;
+  display: flex;
+  gap: 4px;
+}
+
+.rc-drawer-logo-text span {
+  color: #FFE100;
+}
+
+.rc-drawer-close {
+  background: transparent;
+  border: none;
+  color: #A0A8B8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.rc-drawer-close:hover {
+  color: #FFE100;
+}
+
+/* Navigation Links Area */
+.rc-drawer-nav {
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.rc-drawer-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  color: #A0A8B8;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.rc-drawer-link-icon {
+  color: #A0A8B8;
+  transition: color 0.2s ease;
+}
+
+.rc-drawer-link:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.rc-drawer-link.active {
+  color: #FFE100;
+  background: rgba(255, 225, 0, 0.08);
+  border: 1px solid rgba(255, 225, 0, 0.2);
+}
+
+.rc-drawer-link.active .rc-drawer-link-icon {
+  color: #FFE100;
+}

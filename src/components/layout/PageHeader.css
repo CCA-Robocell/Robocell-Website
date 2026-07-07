@@ -1,0 +1,22 @@
+.rc-page-header {
+  background: linear-gradient(180deg, #08111D 0%, #050B14 100%);
+  border-bottom: 1px solid rgba(255, 225, 0, 0.08);
+  padding: 64px 24px 48px;
+  text-align: center;
+}
+
+.rc-page-header-title {
+  color: #FFFFFF;
+  font-size: clamp(30px, 5vw, 56px);
+  font-weight: 800;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.rc-page-header-subtitle {
+  color: #A0A8B8;
+  font-size: 16px;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.7;
+}

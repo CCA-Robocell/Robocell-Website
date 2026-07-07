@@ -1,0 +1,177 @@
+.rc-events-page {
+  background: transparent;
+  min-height: 100vh;
+  padding-top: 62px;
+}
+
+.rc-events-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 64px 24px;
+}
+
+.rc-events-filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.rc-filter-btn {
+  padding: 7px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 225, 0, 0.15);
+  background: transparent;
+  color: #A0A8B8;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.rc-filter-btn:hover {
+  border-color: rgba(255, 225, 0, 0.35);
+  color: #FFFFFF;
+}
+
+.rc-filter-btn.active {
+  border-color: #FFE100;
+  background: rgba(255, 225, 0, 0.1);
+  color: #FFE100;
+}
+
+.rc-events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 28px;
+}
+
+.rc-event-card {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rc-event-cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  position: relative;
+  background-color: #050B14;
+  display: block; /* Ensures the container takes full width */
+}
+
+.rc-event-cover > * {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important; /* Overrides any internal component limits */
+  display: block !important;
+}
+
+.rc-event-cover img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important; /* 'cover' ensures the 16:9 box is perfectly filled edge-to-edge */
+  object-position: center !important;
+  transition: transform 0.4s ease;
+}
+
+.rc-event-card:hover {
+  transform: translateY(-6px);
+}
+
+.rc-event-card:hover .rc-event-cover img {
+  transform: scale(1.06);
+}
+
+.rc-event-closed {
+  opacity: 0.85; /* Dims the card slightly so it looks inactive */
+}
+
+/* Overrides the lift effect */
+.rc-event-closed:hover {
+  transform: none !important;
+  box-shadow: none !important; 
+}
+
+/* Overrides the image zoom effect */
+.rc-event-closed:hover .rc-event-cover img {
+  transform: none !important; 
+}
+
+.rc-event-status-wrapper {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.rc-event-details {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.rc-event-details h3 {
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.rc-event-details .description {
+  color: #A0A8B8;
+  font-size: 14px;
+  line-height: 1.65;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.rc-event-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meta-item.align-start {
+  align-items: flex-start;
+}
+
+.meta-icon-top {
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.meta-item span {
+  color: #A0A8B8;
+  font-size: 13px;
+}
+
+.rc-event-action-btn {
+  width: 100%;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.rc-event-disabled-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 225, 0, 0.15);
+  background: transparent;
+  color: #A0A8B8;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: not-allowed;
+}
