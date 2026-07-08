@@ -34,7 +34,7 @@ export default function Footer() {
               {[ 
                 { icon: <Github size={18} />, href: "https://github.com/CCA-Robocell", label: "GitHub" }, 
                 { icon: <Instagram size={18} />, href: "https://www.instagram.com/robocell.cca.nitdgp/", label: "Instagram" }, 
-                { icon: <Linkedin size={18} />, href: "#", label: "LinkedIn" }, 
+                { icon: <Linkedin size={18} />, href: "https://www.linkedin.com/company/robo-cell-nit-dgp/", label: "LinkedIn" }, 
                 { icon: <Youtube size={18} />, href: "https://www.youtube.com/@robocellnitdgp4781", label: "YouTube" } 
               ].map((s, i) => (
                 <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="rc-footer-social-link">

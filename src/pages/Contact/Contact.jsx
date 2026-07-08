@@ -97,7 +97,6 @@ function ContactForm() {
           <label>Full Name</label>
           <input
             type="text"
-            placeholder="e.g. Priya Sharma"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -108,7 +107,6 @@ function ContactForm() {
           <label>Email Address</label>
           <input
             type="email"
-            placeholder="you@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
