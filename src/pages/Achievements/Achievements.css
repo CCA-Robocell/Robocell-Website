@@ -1,33 +1,218 @@
 /* =========================================
    HALL OF FAME - MASTER STYLESHEET
+   A native scroll-snap "story" experience with
+   a horizontal progress bar that flows above the
+   content (never a fixed side rail), responsive
+   down to small/short phone viewports.
    ========================================= */
 
-/* --- Track & Section Fundamentals --- */
-.rc-hof-track {
+.rc-hof-wrapper {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 70px);
+  height: calc(100dvh - 70px);
+  background:
+    radial-gradient(circle at 15% 15%, rgba(255, 225, 0, 0.055), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(255, 225, 0, 0.045), transparent 42%),
+    #050b14;
+  z-index: 40;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================
+   HORIZONTAL STORY BAR
+   Sits in normal flow above the scroll area —
+   collapses to nothing on the hero slide.
+   ========================================= */
+
+.rc-hof-topbar {
+  flex-shrink: 0;
   width: 100%;
-  height: 100%;
-  will-change: transform;
+  max-height: 88px;
+  opacity: 1;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(9, 14, 22, 0.92), rgba(5, 11, 20, 0.72));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: max-height 0.5s ease, opacity 0.4s ease, padding 0.5s ease,
+    border-color 0.4s ease;
+}
+
+.rc-hof-topbar.is-collapsed {
+  max-height: 0;
+  opacity: 0;
+  border-bottom-color: transparent;
+}
+
+.topbar-track {
+  --topbar-pad-top: 20px;
+  --topbar-pad-x: 28px;
+
+  position: relative;
+  display: flex;
+  align-items: flex-start; /* segs start flush at the top so the line offset below is exact */
+  gap: clamp(20px, 3vw, 40px);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--topbar-pad-top) var(--topbar-pad-x);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.topbar-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* The dot is always the first thing in a .topbar-seg column, so its
+   vertical center sits at: track-padding-top + the seg button's own
+   4px padding-top + half the dot's 10px height. Pinning the line to
+   that exact offset (instead of 50% of the whole track, which also
+   includes the year label below) is what keeps the line running
+   through the dots instead of floating above them. */
+.topbar-line-bg,
+.topbar-line-fill {
+  position: absolute;
+  top: calc(var(--topbar-pad-top) + 4px + 5px);
+  left: var(--topbar-pad-x);
+  height: 2px;
+  border-radius: 4px;
+}
+
+.topbar-line-bg {
+  right: var(--topbar-pad-x);
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.topbar-line-fill {
+  max-width: calc(100% - (2 * var(--topbar-pad-x)));
+  background: linear-gradient(90deg, #ffe100, #ffb800);
+  box-shadow: 0 0 10px rgba(255, 225, 0, 0.55);
+  transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 2;
+}
+
+.topbar-seg {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 4px 2px;
+  font-family: inherit;
+}
+
+.topbar-seg-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  border: 2px solid #050b14;
+  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.topbar-seg-year {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.topbar-seg:hover .topbar-seg-dot {
+  transform: scale(1.35);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.topbar-seg.active .topbar-seg-dot {
+  background: #ffe100;
+  box-shadow: 0 0 0 4px rgba(255, 225, 0, 0.18), 0 0 14px rgba(255, 225, 0, 0.7);
+  transform: scale(1.6);
+}
+
+.topbar-seg.active .topbar-seg-year {
+  color: #ffe100;
+  font-weight: 700;
+}
+
+/* --- Native Scroll-Snap Track --- */
+.rc-hof-scroll {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.rc-hof-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 .rc-hof-section {
-  width: 100vw;
-  height: 100%; 
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+
+.rc-hof-section::-webkit-scrollbar {
+  display: none;
+}
+
+.rc-hof-section-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    650px circle at 50% 105%,
+    rgba(255, 225, 0, 0.06),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.rc-hof-section.is-visible .rc-hof-section-glow {
+  opacity: 1;
+}
+
 /* =========================================
    SLIDE 0: CYBER-LEGACY (FINAL EXPANDED)
    ========================================= */
 
 .hof-hero-section {
-  width: 100vw;
-  height: 100%;
+  width: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 24px 0;
 }
 
 .hof-hero-container {
@@ -38,31 +223,38 @@
 }
 
 /* --- The Cyber Box (Expanded) --- */
-/* --- The Cyber Box (Expanded) --- */
 .hof-cyber-card {
   position: relative;
   width: 100%;
   max-width: 1200px;
-  
-  /* CRITICAL FIX: Let the card grow with the content */
-  height: auto; 
-  min-height: 480px; 
-  max-height: none; /* Removes the rigid ceiling */
-  
-  background: transparent; 
+
+  height: auto;
+  min-height: 480px;
+  max-height: none;
+
+  background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  padding: 40px 60px; 
+  padding: 40px 60px;
   display: flex;
   align-items: center;
-  overflow: visible; 
+  overflow: visible;
+
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rc-hof-section.is-visible .hof-cyber-card {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* --- Glowing Border Accents --- */
 .cyber-line {
   position: absolute;
-  background: #FFE100;
-  box-shadow: 0 0 12px #FFE100, 0 0 24px rgba(255, 225, 0, 0.6);
+  background: #ffe100;
+  box-shadow: 0 0 12px #ffe100, 0 0 24px rgba(255, 225, 0, 0.6);
   z-index: 5;
 }
 
@@ -94,7 +286,7 @@
   width: 52%;
   display: flex;
   flex-direction: column;
-  gap: 20px; 
+  gap: 20px;
 }
 
 /* --- Pill Tag (Inside Box) --- */
@@ -102,36 +294,35 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  color: #FFE100;
-  font-family: 'Courier New', monospace;
+  color: #ffe100;
+  font-family: "Courier New", monospace;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 3px;
-  /* Added pill styling */
   border: 1px solid rgba(255, 225, 0, 0.3);
   background: rgba(255, 225, 0, 0.05);
   border-radius: 40px;
   padding: 8px 20px;
-  margin-bottom: 8px; /* Space between tag and heading */
+  margin-bottom: 8px;
   width: fit-content;
 }
 
 .hof-dot {
   width: 8px;
   height: 8px;
-  background-color: #FFE100;
+  background-color: #ffe100;
   border-radius: 50%;
 }
 
 .hof-cyber-heading {
-  font-size: clamp(38px, 4.5vw, 52px); /* Slightly larger heading */
+  font-size: clamp(38px, 4.5vw, 52px);
   font-weight: 800;
   line-height: 1.15;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .hof-cyber-desc {
-  color: #A0A8B8;
+  color: #a0a8b8;
   font-size: 15px;
   line-height: 1.6;
   max-width: 95%;
@@ -160,42 +351,73 @@
 }
 
 .hof-cyber-stat-item .stat-num {
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 24px;
   font-weight: 700;
   line-height: 1;
 }
 
 .hof-cyber-stat-item .stat-label {
-  color: #A0A8B8;
+  color: #a0a8b8;
   font-size: 11px;
   font-weight: 600;
   text-transform: capitalize;
 }
 
+/* --- Scroll Cue --- */
+.hof-scroll-cue {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.hof-scroll-cue svg {
+  animation: hof-bounce 1.6s ease-in-out infinite;
+  color: #ffe100;
+}
+
+@keyframes hof-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+
 /* --- Right Overlapping Image Area --- */
 .hof-cyber-image-wrapper {
   position: absolute;
-  right: -50px; 
-  bottom: 0px; 
+  right: -50px;
+  bottom: 0px;
   width: 55%;
-  height: 125%; /* Continues to pop out of the top border */
+  height: 125%;
   display: flex;
-  align-items: flex-end; 
+  align-items: flex-end;
   justify-content: flex-end;
-  z-index: 10; 
+  z-index: 10;
   pointer-events: none;
 }
 
 .hof-cyber-image-wrapper img {
-  height: 86%; 
-  width: 100%; 
-  max-width: none; 
-  object-position: bottom right; 
+  height: 86%;
+  width: 100%;
+  max-width: none;
+  object-position: bottom right;
   filter: drop-shadow(-15px 15px 30px rgba(0, 0, 0, 0.8));
 }
+
 /* =========================================
-   SLIDES 1+: SPLIT LAYOUT (With Timeline)
+   SLIDES 1+: SPLIT LAYOUT
    ========================================= */
 
 .rc-hof-content.hof-shifted-left {
@@ -204,8 +426,7 @@
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding-left: 120px; 
-  padding-right: 40px;
+  padding: 24px 40px;
 }
 
 .hof-split-layout {
@@ -214,8 +435,13 @@
   gap: 60px;
   width: 100%;
   opacity: 0;
-  transform: translateY(30px);
-  animation: fadeUp 1s forwards 0.5s;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rc-hof-section.is-visible .hof-split-layout {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .rc-hof-section:nth-child(even) .hof-split-layout {
@@ -227,10 +453,21 @@
   max-width: 500px;
 }
 
+.hof-kicker {
+  display: block;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
 .hof-year {
   display: inline-block;
   color: #121820;
-  background: #FFE100;
+  background: #ffe100;
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 14px;
@@ -240,7 +477,7 @@
 }
 
 .hof-title {
-  color: #FFFFFF;
+  color: #ffffff;
   font-size: 48px;
   font-weight: 800;
   line-height: 1.1;
@@ -248,120 +485,60 @@
 }
 
 .hof-subtitle {
-  color: #FFE100;
+  color: #ffe100;
   font-size: 20px;
   margin-bottom: 24px;
   font-weight: 500;
 }
 
 .hof-description {
-  color: #A0A8B8;
+  color: #a0a8b8;
   font-size: 16px;
   line-height: 1.8;
 }
 
 .hof-image-side {
   flex: 1.2;
+  width: 100%;
 }
 
 .hof-image-block {
+  position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hof-image-block::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: 16px;
+  box-shadow: inset 0 0 0 1px rgba(255, 225, 0, 0.15);
 }
 
 .hof-image-block img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hof-image-block:hover img {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
-@keyframes fadeUp {
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* =========================================
-   THE INTERACTIVE TIMELINE
-   ========================================= */
-
-.rc-hof-timeline {
-  position: absolute;
-  left: 40px; 
-  top: 0;
-  bottom: 0;
-  height: 100%;
-  width: 60px; 
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.timeline-dot-wrapper {
-  cursor: pointer;
-}
-
-.timeline-dot {
-  width: 24px; 
-  height: 24px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  border: 4px solid #050b14; 
-  transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-  flex-shrink: 0;
-}
-
-.timeline-label {
-  position: absolute;
-  left: 36px; 
-  color: #FFFFFF;
-  font-size: 14px;
-  font-weight: 600;
-  opacity: 0;
-  transform: translateX(-10px);
-  transition: all 0.3s ease;
-  pointer-events: none;
-  white-space: nowrap;
-}
-
-.timeline-dot-wrapper:hover .timeline-dot {
-  transform: scale(1.2);
-}
-
-.timeline-dot-wrapper:hover .timeline-label {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.timeline-dot-wrapper.active .timeline-dot {
-  background: #FFE100;
-  box-shadow: 0 0 15px rgba(255, 225, 0, 0.6);
-  transform: scale(1.3);
-}
-
-.timeline-dot-wrapper.active .timeline-label {
-  opacity: 1;
-  transform: translateX(0);
-  color: #FFE100;
-}
-
-/* Tucked tighter into the bottom right corner */
+/* --- Back to Top --- */
 .rc-hof-top-btn {
-  position: absolute;
-  bottom: 80px; 
+  position: fixed;
+  bottom: 28px;
   right: 30px;
-  background: #FFE100;
+  background: #ffe100;
   color: #121820;
   border: none;
   padding: 10px 20px;
@@ -371,23 +548,36 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  z-index: 10;
-  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 50;
   box-shadow: 0 4px 12px rgba(255, 225, 0, 0.2);
+
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease, background 0.2s ease;
+}
+
+.rc-hof-top-btn.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .rc-hof-top-btn:hover {
   background: #e6cb00;
+}
+
+.rc-hof-top-btn.is-visible:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 16px rgba(255, 225, 0, 0.3);
 }
+
 /* =========================================
-   TABLET RESPONSIVENESS (MAX-WIDTH: 950PX)
+   TABLET (MAX-WIDTH: 950PX)
    ========================================= */
 @media (max-width: 950px) {
   .rc-hof-content.hof-shifted-left {
-    padding-left: 90px;
-    padding-right: 30px;
+    padding: 20px 30px;
   }
   .hof-cyber-card {
     padding: 30px;
@@ -395,27 +585,32 @@
   .hof-cyber-heading {
     font-size: clamp(28px, 3.5vw, 38px);
   }
+  .topbar-track {
+    --topbar-pad-top: 16px;
+    --topbar-pad-x: 20px;
+    gap: 22px;
+  }
 }
 
 /* =========================================
-   THE CRITICAL "STACKING" BREAKPOINT (MAX-WIDTH: 850PX)
-   *This safely covers your 614px screen size!*
-   ========================================= */
-/* =========================================
-   THE CRITICAL "STACKING" BREAKPOINT (MAX-WIDTH: 850PX)
+   PHONE / NARROW (MAX-WIDTH: 850PX)
+   Stacks the split layout and shrinks the
+   story bar into a compact, swipeable strip.
    ========================================= */
 @media (max-width: 850px) {
-  
-  /* --- 1. Timeline Adjustments --- */
-  .rc-hof-timeline {
-    left: 5px; 
-    width: 40px;
+  /* --- 1. Story Bar --- */
+  .rc-hof-topbar {
+    max-height: 72px;
   }
 
-  .timeline-label {
+  .topbar-track {
+    --topbar-pad-top: 14px;
+    --topbar-pad-x: 18px;
+    gap: 18px;
+  }
+
+  .topbar-seg-year {
     font-size: 11px;
-    left: 28px; 
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.9); 
   }
 
   /* --- 2. Slide 0 (Cyber Box) Mobile Fixes --- */
@@ -423,81 +618,82 @@
     padding: 0 15px;
   }
 
-.hof-cyber-card {
-    flex-direction: column; 
-    /* CRITICAL FIX: Forces content to start at the top, stopping the cutoff */
-    justify-content: flex-start; 
-    
+  .hof-cyber-card {
+    flex-direction: column;
+    justify-content: flex-start;
+
     height: auto;
     min-height: auto;
-    max-height: none; /* Lets the text push the bottom border down naturally */
-    
-    padding: 30px 20px 40px; /* Added extra bottom padding so stats don't hit the border */
-    overflow: visible; 
+    max-height: none;
+
+    padding: 26px 20px 32px;
+    overflow: visible;
   }
 
   .hof-cyber-content {
     width: 100%;
-    gap: 12px; 
+    gap: 12px;
   }
 
-  /* --- Typography Scaled Up to Fill Empty Space --- */
   .hof-top-tag {
-    margin-top: 5px; 
-    margin-bottom: 12px; /* More breathing room */
-    font-size: 11px; /* Slightly larger */
+    margin-top: 5px;
+    margin-bottom: 12px;
+    font-size: 11px;
     padding: 8px 16px;
   }
 
   .hof-cyber-heading {
-    /* Uses clamp to scale beautifully between 36px and 48px depending on screen size */
-    font-size: clamp(36px, 6vw, 48px); 
+    font-size: clamp(32px, 8vw, 44px);
     line-height: 1.1;
   }
 
   .hof-cyber-desc {
-    font-size: 16px; /* Bumped up from 14px */
-    padding-left: 16px; /* Thicker left border indent */
-    margin-bottom: 24px; /* Pushes the stats box further down */
+    font-size: 15px;
+    padding-left: 16px;
+    margin-bottom: 20px;
     line-height: 1.6;
     max-width: 100%;
   }
 
-  /* --- Stats Box Scaled Up --- */
   .hof-cyber-stats-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 24px; /* Bigger gaps between items */
-    padding: 24px 20px; /* Thicker padding inside the box */
+    gap: 20px;
+    padding: 20px 18px;
   }
 
   .hof-cyber-stat-item {
-    gap: 8px; /* More space between icon, number, and label */
+    gap: 8px;
   }
 
   .hof-cyber-stat-item .stat-num {
-    font-size: 28px; /* Massive boost to numbers */
+    font-size: 26px;
   }
 
   .hof-cyber-stat-item .stat-label {
-    font-size: 13px; /* More readable labels */
+    font-size: 12px;
   }
-  /* 🔥 COMPLETELY HIDES THE ROBOT IMAGE ON MOBILE 🔥 */
+
+  .hof-scroll-cue {
+    display: none;
+  }
+
+  /* Hides the robot image on mobile */
   .hof-cyber-image-wrapper {
-    display: none !important; 
+    display: none !important;
   }
 
   /* --- 3. Slides 1+: Main Content Area --- */
   .rc-hof-content.hof-shifted-left {
-    padding-left: 70px; 
-    padding-right: 15px;
+    padding: 18px 18px 28px;
   }
 
   .hof-split-layout,
   .rc-hof-section:nth-child(even) .hof-split-layout {
-    flex-direction: column-reverse !important; 
+    flex-direction: column !important;
+    align-items: stretch;
     justify-content: center;
-    gap: 16px;
+    gap: 20px;
   }
 
   .hof-text-side,
@@ -506,12 +702,17 @@
     width: 100%;
   }
 
+  .hof-kicker {
+    font-size: 10px;
+    margin-bottom: 8px;
+  }
+
   .hof-image-block {
-    max-height: 200px; 
+    aspect-ratio: 16 / 10;
   }
 
   .hof-title {
-    font-size: 26px;
+    font-size: 28px;
     margin-bottom: 8px;
     line-height: 1.2;
   }
@@ -523,20 +724,57 @@
 
   .hof-description {
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.55;
   }
 
   .rc-hof-top-btn {
-    bottom: 70px; /* Keeps it just above the footer */
-    right: 15px;  /* Pushed tightly into the right corner */
-    padding: 8px 14px; /* Shrinks the button size */
-    font-size: 12px; /* Smaller text */
-    gap: 6px; /* Tighter space between icon and text */
+    bottom: 16px;
+    right: 16px;
+    padding: 8px 14px;
+    font-size: 12px;
+    gap: 6px;
   }
 
-  /* Shrinks the Arrow icon inside the button */
   .rc-hof-top-btn svg {
     width: 16px;
     height: 16px;
+  }
+}
+
+/* =========================================
+   VERY SMALL PHONES (MAX-WIDTH: 380PX)
+   ========================================= */
+@media (max-width: 380px) {
+  .topbar-track {
+    --topbar-pad-x: 14px;
+    gap: 14px;
+  }
+  .hof-cyber-heading {
+    font-size: clamp(28px, 9vw, 36px);
+  }
+  .hof-cyber-stats-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    padding: 16px;
+  }
+}
+
+/* =========================================
+   SHORT / LANDSCAPE VIEWPORTS
+   Lets content breathe instead of clipping when
+   height is tight (e.g. phone landscape).
+   ========================================= */
+@media (max-height: 620px) {
+  .rc-hof-topbar {
+    max-height: 66px;
+  }
+  .topbar-track {
+    --topbar-pad-top: 10px;
+  }
+  .hof-cyber-card {
+    min-height: auto;
+  }
+  .hof-scroll-cue {
+    display: none;
   }
 }

@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
-import PageHeader from "../../components/layout/PageHeader";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import legacyImg from "../../assets/image.png";
 import DriveImage from "../../components/common/DriveImage";
-import { ArrowUp, Trophy, Users, Cpu, Medal } from "lucide-react";
+import { ArrowUp, ChevronDown, Trophy, Users, Cpu, Medal } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 
 // Firebase imports
@@ -16,10 +15,11 @@ export default function Achievements() {
   const [loading, setLoading] = useState(true);
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [fastScroll, setFastScroll] = useState(false);
-  const [isTimelineHovered, setIsTimelineHovered] = useState(false);
-  const touchStartY = useRef(0);
+  const [visibleSet, setVisibleSet] = useState(() => new Set([0]));
+
+  const scrollRef = useRef(null);
+  const sectionRefs = useRef([]);
+  const segRefs = useRef([]);
 
   // --- HIDE GLOBAL FOOTERS ---
   useEffect(() => {
@@ -72,47 +72,66 @@ export default function Achievements() {
     fetchAchievements();
   }, []);
 
-  const handleWheel = (e) => {
-    if (isScrolling) return;
-    if (Math.abs(e.deltaY) < 20) return;
+  // --- SCROLLSPY: track which section is centered (drives the rail) ---
+  // --- REVEAL: fade sections in as they enter the viewport ---
+  useEffect(() => {
+    if (!achievements.length) return;
 
-    setFastScroll(false);
+    const spy = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.dataset.index);
+            setActiveIndex(idx);
+          }
+        });
+      },
+      { root: scrollRef.current, rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+    );
 
-    if (e.deltaY > 0 && activeIndex < achievements.length - 1) {
-      triggerScroll(activeIndex + 1);
-    } else if (e.deltaY < 0 && activeIndex > 0) {
-      triggerScroll(activeIndex - 1);
-    }
-  };
+    const reveal = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.dataset.index);
+            setVisibleSet((prev) =>
+              prev.has(idx) ? prev : new Set(prev).add(idx),
+            );
+          }
+        });
+      },
+      { root: scrollRef.current, threshold: 0.25 },
+    );
 
-  const handleTouchStart = (e) => {
-    touchStartY.current = e.touches[0].clientY;
-  };
+    sectionRefs.current.forEach((el) => {
+      if (!el) return;
+      spy.observe(el);
+      reveal.observe(el);
+    });
 
-  const handleTouchEnd = (e) => {
-    if (isScrolling) return;
-    const touchEndY = e.changedTouches[0].clientY;
-    const deltaY = touchStartY.current - touchEndY;
+    return () => {
+      spy.disconnect();
+      reveal.disconnect();
+    };
+  }, [achievements]);
 
-    setFastScroll(false);
+  const scrollToIndex = useCallback((index) => {
+    sectionRefs.current[index]?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, []);
 
-    if (deltaY > 50 && activeIndex < achievements.length - 1) {
-      triggerScroll(activeIndex + 1);
-    } else if (deltaY < -50 && activeIndex > 0) {
-      triggerScroll(activeIndex - 1);
-    }
-  };
+  // Keep the active pill scrolled into view inside the horizontal story bar
+  useEffect(() => {
+    segRefs.current[activeIndex]?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+  }, [activeIndex]);
 
-  const triggerScroll = (newIndex) => {
-    setIsScrolling(true);
-    setActiveIndex(newIndex);
-    setTimeout(() => setIsScrolling(false), 1200);
-  };
-
-  const jumpToTop = () => {
-    setFastScroll(true);
-    setActiveIndex(0);
-  };
+  const jumpToTop = () => scrollToIndex(0);
 
   if (loading) {
     return (
@@ -151,136 +170,44 @@ export default function Achievements() {
         />
       </Helmet>
 
-      <div
-        className="rc-hof-wrapper"
-        onWheel={handleWheel}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        style={{
-          position: "fixed",
-          top: "70px",
-          left: 0,
-          width: "100vw",
-          height: "calc(100vh - 70px)",
-          backgroundColor: "#050b14",
-          zIndex: 40,
-          overflow: "hidden",
-        }}
-      >
-        {/* Sliding Timeline */}
-        <div
-          className="rc-hof-timeline"
-          onMouseEnter={() => setIsTimelineHovered(true)}
-          onMouseLeave={() => setIsTimelineHovered(false)}
-          style={{
-            opacity: activeIndex === 0 ? 0 : 1,
-            pointerEvents: activeIndex === 0 ? "none" : "auto",
-            transition: "opacity 0.6s ease",
-          }}
+      <div className="rc-hof-wrapper">
+        {/* Horizontal Story Bar — flows above the content, never a fixed side rail */}
+        <nav
+          className={`rc-hof-topbar ${activeIndex === 0 ? "is-collapsed" : ""}`}
         >
-          <div
-            className="timeline-track-container"
-            style={{
-              position: "relative",
-              width: "30px",
-              height: "80%",
-              margin: "0 auto",
-            }}
-          >
+          <div className="topbar-track">
+            <div className="topbar-line-bg" />
             <div
-              className="timeline-line-bg"
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: 0,
-                bottom: 0,
-                width: "8px",
-                backgroundColor: "rgba(255, 255, 255, 0.08)",
-                borderRadius: "10px",
-                transformOrigin: "center",
-                transform: isTimelineHovered
-                  ? "translateX(-50%) scaleX(1.3)"
-                  : "translateX(-50%) scaleX(1)",
-                transition: "transform 0.3s ease",
-                zIndex: 1,
-              }}
-            ></div>
+              className="topbar-line-fill"
+              style={{ width: `${progressPercentage}%` }}
+            />
 
-            <div
-              className="timeline-line-fill"
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: 0,
-                width: "8px",
-                backgroundColor: "#FFE100",
-                borderRadius: "10px",
-                transformOrigin: "center",
-                height: `${progressPercentage}%`,
-                transform: isTimelineHovered
-                  ? "translateX(-50%) scaleX(1.3)"
-                  : "translateX(-50%) scaleX(1)",
-                transition:
-                  "height 1s cubic-bezier(0.65, 0, 0.35, 1), transform 0.3s ease",
-                zIndex: 2,
-              }}
-            ></div>
-
-            {achievements.map((item, index) => {
-              const topPosition = `${(index / (achievements.length - 1)) * 100}%`;
-
-              return (
-                <div
-                  key={item.id || `${item.year}-${index}`}
-                  className={`timeline-dot-wrapper ${activeIndex === index ? "active" : ""}`}
-                  style={{
-                    position: "absolute",
-                    top: topPosition,
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    display: "flex",
-                    alignItems: "center",
-                    zIndex: 3,
-                    transition: "top 0.5s ease",
-                  }}
-                  onClick={() => {
-                    setFastScroll(false);
-                    triggerScroll(index);
-                  }}
-                >
-                  <div className="timeline-dot"></div>
-                  <span className="timeline-label">{item.year}</span>
-                </div>
-              );
-            })}
+            {achievements.map((item, index) => (
+              <button
+                key={item.id || `${item.year}-${index}`}
+                type="button"
+                ref={(el) => (segRefs.current[index] = el)}
+                className={`topbar-seg ${activeIndex === index ? "active" : ""}`}
+                onClick={() => scrollToIndex(index)}
+              >
+                <span className="topbar-seg-dot" />
+                <span className="topbar-seg-year">{item.year}</span>
+              </button>
+            ))}
           </div>
-        </div>
+        </nav>
 
-        {/* Main Content Track */}
-        <div
-          className="rc-hof-track"
-          style={{
-            transform: `translateY(-${activeIndex * 100}%)`,
-            transition: fastScroll
-              ? "none"
-              : "transform 1s cubic-bezier(0.65, 0, 0.35, 1)",
-            width: "100%",
-            height: "100%",
-            willChange: "transform",
-          }}
-        >
+        {/* Native scroll-snap story track */}
+        <div className="rc-hof-scroll" ref={scrollRef}>
           {achievements.map((achieve, index) => (
             <section
               key={achieve.id || `${achieve.year}-${index}`}
-              className="rc-hof-section"
-              style={{
-                height: "100%",
-                width: "100vw",
-                display: "flex",
-                flexDirection: "column",
-                position: "relative",
-              }}
+              ref={(el) => (sectionRefs.current[index] = el)}
+              data-index={index}
+              className={`rc-hof-section ${visibleSet.has(index) ? "is-visible" : ""}`}
             >
+              <div className="rc-hof-section-glow" aria-hidden="true" />
+
               {/* Slide 0: The Cyber-Legacy Intro */}
               {index === 0 ? (
                 <div className="hof-hero-section">
@@ -344,6 +271,11 @@ export default function Achievements() {
                             <span className="stat-label">National Wins</span>
                           </div>
                         </div>
+
+                        <div className="hof-scroll-cue">
+                          <span>Scroll to explore the journey</span>
+                          <ChevronDown size={16} />
+                        </div>
                       </div>
 
                       <div className="hof-cyber-image-wrapper">
@@ -357,6 +289,10 @@ export default function Achievements() {
                 <div className="rc-hof-content hof-shifted-left">
                   <div className="hof-split-layout">
                     <div className="hof-text-side">
+                      <span className="hof-kicker">
+                        Achievement {String(index).padStart(2, "0")} /{" "}
+                        {String(achievements.length - 1).padStart(2, "0")}
+                      </span>
                       <h3 className="hof-year">{achieve.year}</h3>
                       <h2 className="hof-title">{achieve.title}</h2>
                       <h4 className="hof-subtitle">{achieve.subtitle}</h4>
@@ -412,17 +348,18 @@ export default function Achievements() {
                   </div>
                 </div>
               )}
-
-              {/* Back to Top */}
-              {index === achievements.length - 1 && (
-                <button className="rc-hof-top-btn" onClick={jumpToTop}>
-                  <ArrowUp size={20} color="#121820" />
-                  Back to Top
-                </button>
-              )}
             </section>
           ))}
         </div>
+
+        {/* Back to Top */}
+        <button
+          className={`rc-hof-top-btn ${activeIndex > 0 ? "is-visible" : ""}`}
+          onClick={jumpToTop}
+        >
+          <ArrowUp size={20} color="#121820" />
+          Back to Top
+        </button>
       </div>
     </>
   );
