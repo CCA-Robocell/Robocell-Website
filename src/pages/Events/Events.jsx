@@ -127,11 +127,11 @@ export default function Events() {
                   <div className="rc-event-cover">
                     <DriveImage rawLink={event.image} alt={event.title} />
 
-                    <div className="rc-event-status-wrapper">
-                      <span className={getStatusStyle(event.status)}>
-                        {event.status}
-                      </span>
-                    </div>
+                    <span
+                      className={`rc-event-status ${getStatusStyle(event.status)}`}
+                    >
+                      {event.status}
+                    </span>
                   </div>
 
                   <div className="rc-event-details">

@@ -28,7 +28,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="rc-footer-description">
-              NIT Durgapur's premier technical robotics club, building the future of autonomous systems and intelligent machines since 2012.
+              NIT Durgapur's official robotics club, building the future of autonomous systems and intelligent machines.
             </p>
             <div className="rc-footer-social">
               {[ 
@@ -69,8 +69,8 @@ export default function Footer() {
             <h4 className="rc-footer-heading">Contact</h4>
             <div className="rc-footer-contact-list">
               {[ 
-                { icon: <Mail size={16} />, text: "roboticsclub@nitdgp.ac.in" }, 
-                { icon: <Phone size={16} />, text: "+91 94320 00001" }, 
+                { icon: <Mail size={16} />, text: "rcnitdgp@gmail.com" }, 
+                { icon: <Phone size={16} />, text: "+91 80886 65629" }, 
                 { icon: <MapPin size={16} />, text: "NIT Durgapur, West Bengal — 713209" } 
               ].map((item, i) => (
                 <div key={i} className="rc-footer-contact-item">

@@ -168,7 +168,7 @@ const CHANNELS = [
     ),
     title: "Email Us",
     sub: "Usually replies within 24h",
-    value: "contact@robocellnitd.in",
+    value: "rcnitdgp@gmail.com",
     mono: true,
   },
   {
@@ -194,7 +194,7 @@ const CHANNELS = [
     ),
     title: "Call Us",
     sub: "Mon–Fri, 10am to 6pm",
-    value: "+91 98765 43210",
+    value: "+91 80886 65629",
     mono: true,
   },
   {

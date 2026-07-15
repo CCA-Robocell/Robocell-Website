@@ -54,27 +54,11 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.rc-event-cover {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  position: relative;
-  background-color: #050B14;
-  display: block; /* Ensures the container takes full width */
-}
-
-.rc-event-cover > * {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: none !important; /* Overrides any internal component limits */
-  display: block !important;
-}
-
 .rc-event-cover img {
   width: 100% !important;
   height: 100% !important;
   max-width: none !important;
-  object-fit: contain !important; /* 'cover' ensures the 16:9 box is perfectly filled edge-to-edge */
+  object-fit: fill !important; /* 'cover' ensures the 16:9 box is perfectly filled edge-to-edge */
   object-position: center !important;
   transition: transform 0.4s ease;
 }
@@ -102,10 +86,18 @@
   transform: none !important; 
 }
 
-.rc-event-status-wrapper {
-  position: absolute;
-  top: 12px;
-  right: 12px;
+.rc-event-cover {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+}
+
+.rc-event-status {
+    position: absolute;
+    inset-block-start: 1rem;
+    inset-inline-end: 1rem;
+
+    z-index: 5;
 }
 
 .rc-event-details {

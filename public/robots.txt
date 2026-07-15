@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://robocellnitdgp.in/sitemap.xml
+Sitemap: https://robocellnitdgp.com/sitemap.xml
