@@ -32,7 +32,7 @@ export default function Footer() {
             </p>
             <div className="rc-footer-social">
               {[ 
-                { icon: <Github size={18} />, href: "https://github.com/CCA-Robocell", label: "GitHub" }, 
+                { icon: <Github size={18} />, href: "https://github.com/robocell-cca", label: "GitHub" }, 
                 { icon: <Instagram size={18} />, href: "https://www.instagram.com/robocell.cca.nitdgp/", label: "Instagram" }, 
                 { icon: <Linkedin size={18} />, href: "https://www.linkedin.com/company/robo-cell-nit-dgp/", label: "LinkedIn" }, 
                 { icon: <Youtube size={18} />, href: "https://www.youtube.com/@robocellnitdgp4781", label: "YouTube" } 
